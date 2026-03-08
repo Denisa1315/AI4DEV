@@ -17,7 +17,7 @@ analyzer = VoiceAnalyzer()
 analyzer.warmup()
 
 print("\n" + "="*60)
-print("  AffectSync — Voice Analysis Test")
+print("  Emora — Voice Analysis Test")
 print("="*60)
 print("  Speak naturally into your microphone")
 print("  Try different emotions:")

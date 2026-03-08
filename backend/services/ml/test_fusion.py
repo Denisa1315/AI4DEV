@@ -11,7 +11,7 @@ from fusion_engine  import fusion_engine,  SignalInput
 from baseline_model import baseline_model
 
 print("\n" + "="*60)
-print("  AffectSync — Fusion Engine + Baseline Test")
+print("  Emora — Fusion Engine + Baseline Test")
 print("="*60 + "\n")
 
 USER = "test_user"

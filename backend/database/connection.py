@@ -12,7 +12,7 @@ if not MONGO_URI:
     raise ValueError("MONGO_URI environment variable is not set. Please define it in your .env file.")
 
 # Initialize the MongoDB client
-client = MongoClient(MONGO_URI)
+client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
 
 # Default to "ai_emergency_monitoring" if no database is defined in the URI
 db = client.get_default_database(default="ai_emergency_monitoring")

@@ -25,3 +25,8 @@ async def receive_generic(payload: dict):
 async def simulate_watch(scenario: str):
     result = watch_analyzer.simulate_and_process(scenario)
     return watch_analyzer.to_dict()
+
+@router.get("/status")
+async def watch_status():
+    """Return current watch_analyzer state (used by watch_receiver proxy)."""
+    return watch_analyzer.to_dict()

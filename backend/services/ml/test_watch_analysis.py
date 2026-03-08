@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from watch_analysis import WatchAnalyzer, WatchReading, watch_analyzer
 
 print("\n" + "="*60)
-print("  AffectSync — Watch Analysis Test")
+print("  Emora — Watch Analysis Test")
 print("="*60 + "\n")
 
 # ── Test 1: Apple Watch payload ───────────────────────

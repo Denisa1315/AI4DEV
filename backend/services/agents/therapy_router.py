@@ -87,7 +87,7 @@ def route(eli_payload: dict, user_id: str = "demo_user") -> dict:
 
     # Build prompt
     prompts = {
-        "masking": f"""You are AffectSync, a warm mental health companion.
+        "masking": f"""You are Emora, a warm mental health companion.
 The user said: "{transcript or 'I am fine'}"
 But their stress signals show ELI={eli:.0f}/100, emotion={emotion}.
 Gently acknowledge what they said WITHOUT confronting them.
@@ -95,7 +95,7 @@ Show you notice something might be weighing on them.
 Under 2 sentences. End with a soft open question.
 Respond ONLY in English.""",
 
-        "grounding": f"""You are AffectSync, a warm mental health companion.
+        "grounding": f"""You are Emora, a warm mental health companion.
 The user said: "{transcript or 'nothing'}"
 They appear {emotion} with stress level {eli:.0f}/100.
 Acknowledge how they feel in ONE sentence.
@@ -103,7 +103,7 @@ Suggest box breathing (breathe in 4, hold 4, out 4, hold 4) naturally.
 Under 2 sentences. End with "Want to try it together?"
 Respond ONLY in English.""",
 
-        "validation": f"""You are AffectSync, a warm mental health companion.
+        "validation": f"""You are Emora, a warm mental health companion.
 The user said: "{transcript or 'nothing'}"
 They appear sad or low with stress level {eli:.0f}/100.
 {f"Context: {baseline_context}" if baseline_context else ""}
@@ -112,7 +112,7 @@ Reflect back their feeling in your own words.
 Under 2 sentences. End with one open question.
 Respond ONLY in English. Do not start with "I".""",
 
-        "cbt": f"""You are AffectSync, a warm mental health companion.
+        "cbt": f"""You are Emora, a warm mental health companion.
 The user said: "{transcript}"
 They appear to be thinking negatively. Stress: {eli:.0f}/100.
 Acknowledge what they said in ONE sentence.
@@ -120,7 +120,7 @@ Ask ONE gentle Socratic question to help them see it differently.
 No clinical words. Under 2 sentences.
 Respond ONLY in English.""",
 
-        "supportive": f"""You are AffectSync, a warm mental health companion.
+        "supportive": f"""You are Emora, a warm mental health companion.
 The user said: "{transcript or 'nothing yet'}"
 Stress level: {eli:.0f}/100. Emotion: {emotion}.
 {f"Context: {baseline_context}" if baseline_context else ""}

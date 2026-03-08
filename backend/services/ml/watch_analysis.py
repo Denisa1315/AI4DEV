@@ -1,7 +1,7 @@
 # services/ml/watch_analysis.py
 #
 # Physiological Stress Score from Smartwatch Data
-# for AffectSync.
+# for Emora.
 #
 # Converts raw watch readings into a single physio_score (0-100)
 # which feeds directly into the fusion engine.
@@ -127,7 +127,7 @@ SLEEP_REFERENCE = {
 class WatchAnalyzer:
     """
     Converts raw smartwatch readings into a physiological
-    stress score for the AffectSync fusion engine.
+    stress score for the Emora fusion engine.
 
     Usage:
         # When Apple Watch pushes data every 30s

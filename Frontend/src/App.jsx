@@ -1,34 +1,32 @@
-import { useState, useEffect } from 'react'
-import Dashboard    from './pages/Dashboard'
-import SessionStart from './pages/SessionStart'
-import SessionEnd   from './pages/SessionEnd'
+import { useState, useEffect } from "react"
+import SessionStart from "./pages/SessionStart"
+import ChatPage from "./pages/ChatPage"
+import DashboardPage from "./pages/DashboardPage"
+import { useWebSocket } from "./hooks/useWebSocket"
 
 export default function App() {
-  const [page, setPage]       = useState('start')
-  const [endData, setEndData] = useState(null)
+  const [page, setPage] = useState("start")
 
-  // Update browser tab title based on current page
+  // Titles
   useEffect(() => {
     const titles = {
-      start:   'AffectSync — Start Session',
-      session: 'AffectSync — Live Session 🟢',
-      end:     'AffectSync — Session Summary',
+      start: "Emora — Start",
+      chat: "Emora — Live Session 🟢",
+      dashboard: "Emora — Dashboard",
     }
-    document.title = titles[page] || 'AffectSync'
+    document.title = titles[page] || "Emora"
   }, [page])
 
-  if (page === 'start') return (
-    <SessionStart onStart={() => setPage('session')} />
+  // Keep WebSocket alive once session starts
+  useWebSocket()
+
+  if (page === "start") return (
+    <SessionStart onStart={() => setPage("chat")} />
   )
-  if (page === 'end') return (
-    <SessionEnd
-      data={endData}
-      onRestart={() => { setEndData(null); setPage('start') }}
-    />
+  if (page === "dashboard") return (
+    <DashboardPage onGoToChat={() => setPage("chat")} />
   )
   return (
-    <Dashboard
-      onEnd={(data) => { setEndData(data); setPage('end') }}
-    />
+    <ChatPage onGoToDashboard={() => setPage("dashboard")} />
   )
 }

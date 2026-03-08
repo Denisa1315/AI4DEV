@@ -1,0 +1,32 @@
+# Core
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+
+# Database
+motor
+pymongo
+
+# ML — Dev 1
+deepface
+opencv-python
+tensorflow-macos
+tensorflow-metal
+librosa
+sounddevice
+soundfile
+scipy
+numpy
+python-multipart
+faster-whisper
+transformers
+torch
+
+# AI Agents — Dev 2
+langchain
+langchain-ollama
+langchain-anthropic
+
+# Scheduling
+apscheduler

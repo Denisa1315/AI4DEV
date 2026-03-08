@@ -127,7 +127,7 @@ def draw_overlay(frame, facial, voice, watch, eli_data):
     cv2.addWeighted(overlay, 0.75, frame, 0.25, 0, frame)
 
     # ── Title ─────────────────────────────────────────
-    put_text(frame, "AffectSync", 10, 28,
+    put_text(frame, "Emora", 10, 28,
              color=(100, 220, 255), scale=0.8, thickness=2)
     put_text(frame, "Real-Time Fusion", 10, 50,
              color=(150, 150, 150), scale=0.45)
@@ -239,7 +239,7 @@ def draw_overlay(frame, facial, voice, watch, eli_data):
 # ─────────────────────────────────────────────────────
 def main():
     print("\n" + "="*55)
-    print("  AffectSync — Real-Time Fusion Test")
+    print("  Emora — Real-Time Fusion Test")
     print("="*55)
     print("  Camera + Mic + Simulated Watch")
     print("  ELI updates every 3 seconds")
@@ -339,7 +339,7 @@ def main():
             state.get("eli",    {}),
         )
 
-        cv2.imshow("AffectSync — Real-Time Fusion", frame)
+        cv2.imshow("Emora — Real-Time Fusion", frame)
 
         key = cv2.waitKey(30) & 0xFF
         if key == ord('q') or key == ord('Q') or key == 27:

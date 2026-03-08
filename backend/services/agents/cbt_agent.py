@@ -37,7 +37,7 @@ class CBTAgent:
         }
         context = context_map.get(distortion, "thinking negatively")
 
-        prompt = f"""You are AffectSync, a warm mental health companion for Indian users.
+        prompt = f"""You are Emora, a warm mental health companion for Indian users.
 The user appears to be {context}.
 Stress: {eli:.0f}/100. Emotion: {emotion}.
 They said: "{transcript or 'nothing yet'}"

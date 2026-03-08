@@ -89,7 +89,7 @@ class GroundingAgent:
             "surprise":"feeling caught off guard",
         }.get(emotion, "feeling stressed")
 
-        prompt = f"""You are AffectSync, a warm mental health companion for Indian users.
+        prompt = f"""You are Emora, a warm mental health companion for Indian users.
 
 The user appears to be {emotion_context} (stress level: {eli:.0f}/100).
 They said: "{transcript if transcript else 'nothing yet'}"

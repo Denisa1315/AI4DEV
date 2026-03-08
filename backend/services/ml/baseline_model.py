@@ -1,6 +1,6 @@
 # services/ml/baseline_model.py
 #
-# Personal Emotional Baseline Model for AffectSync.
+# Personal Emotional Baseline Model for Emora.
 #
 # Instead of comparing user scores against population averages,
 # this model learns each user's personal normal ranges over time.

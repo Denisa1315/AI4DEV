@@ -4,9 +4,9 @@ import { jsPDF } from "jspdf"
 // ── Helper: trigger a browser file download ──────────────────────
 function downloadFile(filename, content, mimeType) {
   const blob = new Blob([content], { type: mimeType })
-  const url  = URL.createObjectURL(blob)
-  const a    = document.createElement("a")
-  a.href     = url
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
   a.download = filename
   document.body.appendChild(a)
   a.click()
@@ -34,41 +34,41 @@ export function exportSessionPDF(sessionData) {
   const {
     sessionId, startEli, endEli, duration,
     technique, microAction, therapyMode,
-    messages   = [],
+    messages = [],
     eliHistory = [],
-    watchData  = {},
+    watchData = {},
   } = sessionData
 
-  const doc    = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
-  const W      = doc.internal.pageSize.getWidth()   // 210
-  const H      = doc.internal.pageSize.getHeight()  // 297
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
+  const W = doc.internal.pageSize.getWidth()   // 210
+  const H = doc.internal.pageSize.getHeight()  // 297
   const margin = 16
-  const inner  = W - margin * 2
-  let   y      = margin
+  const inner = W - margin * 2
+  let y = margin
 
   const date = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
   const time = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
 
-  const start    = Math.round(startEli ?? 0)
-  const end      = Math.round(endEli   ?? 0)
+  const start = Math.round(startEli ?? 0)
+  const end = Math.round(endEli ?? 0)
   const improved = end < start
-  const delta    = Math.abs(start - end)
-  const mins     = Math.floor((duration ?? 0) / 60)
-  const secs     = (duration ?? 0) % 60
+  const delta = Math.abs(start - end)
+  const mins = Math.floor((duration ?? 0) / 60)
+  const secs = (duration ?? 0) % 60
 
   const startColor = getEliColor(start)
-  const endColor   = getEliColor(end)
+  const endColor = getEliColor(end)
 
   // ── Palette ──
-  const BG        = [10,  10,  15 ]
-  const CARD      = [17,  24,  39 ]
-  const BORDER    = [55,  65,  81 ]
-  const WHITE     = [241, 245, 249]
-  const GRAY      = [156, 163, 175]
-  const DARKGRAY  = [75,  85,  99 ]
-  const BLUE      = [59,  130, 246]
-  const GREEN     = [34,  197, 94 ]
-  const ORANGE    = [249, 115, 22 ]
+  const BG = [10, 10, 15]
+  const CARD = [17, 24, 39]
+  const BORDER = [55, 65, 81]
+  const WHITE = [241, 245, 249]
+  const GRAY = [156, 163, 175]
+  const DARKGRAY = [75, 85, 99]
+  const BLUE = [59, 130, 246]
+  const GREEN = [34, 197, 94]
+  const ORANGE = [249, 115, 22]
 
   // ── Helpers ─────────────────────────────────────────────────
   const addPage = () => {
@@ -164,7 +164,7 @@ export function exportSessionPDF(sessionData) {
   doc.setFontSize(18)
   doc.setFont("helvetica", "bold")
   doc.setTextColor(...WHITE)
-  doc.text("AffectSync", margin + 20, 16)
+  doc.text("Emora", margin + 20, 16)
   doc.setFontSize(9)
   doc.setFont("helvetica", "normal")
   doc.setTextColor(...GRAY)
@@ -223,19 +223,19 @@ export function exportSessionPDF(sessionData) {
   card(y, statsH)
 
   const stats = [
-    { label: "Duration",   value: `${mins}m ${secs}s`           },
-    { label: "Technique",  value: technique || "Supportive"      },
-    { label: "HRV",        value: `${watchData.hrv ?? "--"} ms`  },
+    { label: "Duration", value: `${mins}m ${secs}s` },
+    { label: "Technique", value: technique || "Supportive" },
+    { label: "HRV", value: `${watchData.hrv ?? "--"} ms` },
     { label: "Heart Rate", value: `${watchData.heart_rate ?? "--"} bpm` },
-    { label: "Sleep",      value: `${watchData.sleep_hours ?? "--"} hrs` },
-    { label: "Messages",   value: String(messages.length)        },
+    { label: "Sleep", value: `${watchData.sleep_hours ?? "--"} hrs` },
+    { label: "Messages", value: String(messages.length) },
   ]
 
   const colW = inner / stats.length
   stats.forEach(({ label: l, value: v }, i) => {
     const sx = margin + i * colW + colW / 2
     label(l, sx, y + 12, 6.5, GRAY)
-    mono(v,   sx, y + 24, 8.5, WHITE)
+    mono(v, sx, y + 24, 8.5, WHITE)
     doc.setTextColor(sx, sx, sx)
   })
 
@@ -243,11 +243,11 @@ export function exportSessionPDF(sessionData) {
 
   // ── Therapy Mode pill ────────────────────────────────────
   const modeColors = {
-    grounding:  [37,  99,  235],
-    cbt:        [109, 40,  217],
-    validation: [5,   150, 105],
-    crisis:     [185, 28,  28 ],
-    supportive: [75,  85,  99 ],
+    grounding: [37, 99, 235],
+    cbt: [109, 40, 217],
+    validation: [5, 150, 105],
+    crisis: [185, 28, 28],
+    supportive: [75, 85, 99],
   }
   const mColor = modeColors[therapyMode] || modeColors.supportive
   pill(
@@ -277,20 +277,20 @@ export function exportSessionPDF(sessionData) {
     card(y, sparkH)
     label("ELI Timeline", margin + 6, y + 8)
 
-    const pts   = eliHistory.slice(-40)
-    const bw    = inner - 12
-    const bh    = 16
-    const bx    = margin + 6
-    const by    = y + 10
+    const pts = eliHistory.slice(-40)
+    const bw = inner - 12
+    const bh = 16
+    const bx = margin + 6
+    const by = y + 10
     const stepX = bw / Math.max(pts.length - 1, 1)
 
-    // Grid lines at 40, 65, 85
-    ;[40, 65, 85].forEach(threshold => {
-      const ty = by + bh - (threshold / 100) * bh
-      doc.setDrawColor(55, 65, 81)
-      doc.setLineWidth(0.2)
-      doc.line(bx, ty, bx + bw, ty)
-    })
+      // Grid lines at 40, 65, 85
+      ;[40, 65, 85].forEach(threshold => {
+        const ty = by + bh - (threshold / 100) * bh
+        doc.setDrawColor(55, 65, 81)
+        doc.setLineWidth(0.2)
+        doc.line(bx, ty, bx + bw, ty)
+      })
 
     // Sparkline path
     pts.forEach((pt, i) => {
@@ -307,8 +307,8 @@ export function exportSessionPDF(sessionData) {
 
     // Dots at last point
     const last = pts[pts.length - 1]
-    const lx2  = bx + (pts.length - 1) * stepX
-    const ly2  = by + bh - (last.eli / 100) * bh
+    const lx2 = bx + (pts.length - 1) * stepX
+    const ly2 = by + bh - (last.eli / 100) * bh
     const [lr2, lg2, lb2] = hexToRgb(getEliColor(last.eli))
     doc.setFillColor(lr2, lg2, lb2)
     doc.circle(lx2, ly2, 1.2, "F")
@@ -323,10 +323,10 @@ export function exportSessionPDF(sessionData) {
     label("Vitals Snapshot", margin + 6, y + 8)
 
     const vitals = [
-      { k: "HRV",       v: `${watchData.hrv ?? "--"} ms`,        color: [96, 165, 250] },
-      { k: "Heart Rate",v: `${watchData.heart_rate ?? "--"} bpm`, color: [248, 113, 113] },
-      { k: "Sleep",     v: `${watchData.sleep_hours ?? "--"} hrs`,color: [167, 139, 250] },
-      { k: "Physio",    v: `${watchData.physio_score ?? "--"}/100`,color: [52, 211, 153] },
+      { k: "HRV", v: `${watchData.hrv ?? "--"} ms`, color: [96, 165, 250] },
+      { k: "Heart Rate", v: `${watchData.heart_rate ?? "--"} bpm`, color: [248, 113, 113] },
+      { k: "Sleep", v: `${watchData.sleep_hours ?? "--"} hrs`, color: [167, 139, 250] },
+      { k: "Physio", v: `${watchData.physio_score ?? "--"}/100`, color: [52, 211, 153] },
     ]
 
     vitals.forEach(({ k, v, color }, i) => {
@@ -345,7 +345,7 @@ export function exportSessionPDF(sessionData) {
   doc.setFontSize(6.5)
   doc.setTextColor(...DARKGRAY)
   doc.text(
-    "AffectSync · All data is private and stays on your device",
+    "Emora · All data is private and stays on your device",
     W / 2, H - 8, { align: "center" }
   )
   doc.text("1", W - margin, H - 8, { align: "right" })
@@ -366,17 +366,17 @@ export function exportSessionPDF(sessionData) {
     y += 6
 
     messages.forEach((msg, idx) => {
-      const isUser    = msg.role === "user"
+      const isUser = msg.role === "user"
       const fromVoice = msg.fromVoice
-      const maxW      = inner * 0.75
-      const lines     = wrapText(doc, msg.content || "", maxW - 10)
-      const bubbleH   = Math.max(14, lines.length * 5 + 10)
+      const maxW = inner * 0.75
+      const lines = wrapText(doc, msg.content || "", maxW - 10)
+      const bubbleH = Math.max(14, lines.length * 5 + 10)
 
       checkPageBreak(bubbleH + 10)
 
       const bubbleX = isUser ? W - margin - maxW : margin
-      const bgCol   = isUser ? [30, 58, 138] : [31, 41, 55]
-      const border  = isUser ? [59, 130, 246] : [55, 65, 81]
+      const bgCol = isUser ? [30, 58, 138] : [31, 41, 55]
+      const border = isUser ? [59, 130, 246] : [55, 65, 81]
 
       // Bubble background
       doc.setFillColor(...bgCol)
@@ -390,7 +390,7 @@ export function exportSessionPDF(sessionData) {
       doc.setTextColor(...GRAY)
       const roleLabel = isUser
         ? (fromVoice ? "You (voice)" : "You")
-        : "AffectSync"
+        : "Emora"
       doc.text(roleLabel, bubbleX + 5, y + 6)
 
       // Therapy mode tag on AI messages
@@ -439,7 +439,7 @@ export function exportSessionPDF(sessionData) {
     doc.setFontSize(6.5)
     doc.setTextColor(...DARKGRAY)
     doc.text(
-      "AffectSync · All data is private and stays on your device",
+      "Emora · All data is private and stays on your device",
       W / 2, H - 8, { align: "center" }
     )
     doc.text("2", W - margin, H - 8, { align: "right" })
@@ -458,11 +458,11 @@ export function exportSessionPDF(sessionData) {
 
     // Table header
     const cols = [
-      { label: "#",      w: 12 },
-      { label: "Time",   w: 38 },
-      { label: "Score",  w: 28 },
+      { label: "#", w: 12 },
+      { label: "Time", w: 38 },
+      { label: "Score", w: 28 },
       { label: "Status", w: 50 },
-      { label: "Bar",    w: inner - 12 - 38 - 28 - 50 },
+      { label: "Bar", w: inner - 12 - 38 - 28 - 50 },
     ]
 
     card(y, 10, [31, 41, 55])
@@ -516,14 +516,14 @@ export function exportSessionPDF(sessionData) {
     doc.setFontSize(6.5)
     doc.setTextColor(...DARKGRAY)
     doc.text(
-      "AffectSync · All data is private and stays on your device",
+      "Emora · All data is private and stays on your device",
       W / 2, H - 8, { align: "center" }
     )
     doc.text("3", W - margin, H - 8, { align: "right" })
   }
 
   // ── Save ──────────────────────────────────────────────────
-  const filename = `affectsync-report-${new Date().toISOString().slice(0, 10)}.pdf`
+  const filename = `Emora-report-${new Date().toISOString().slice(0, 10)}.pdf`
   doc.save(filename)
 }
 
@@ -540,39 +540,39 @@ export function exportSessionJSON(sessionData) {
   const payload = {
     meta: {
       exportedAt: new Date().toISOString(),
-      sessionId:  sessionId || "unknown",
-      appVersion: "AffectSync v1.0",
+      sessionId: sessionId || "unknown",
+      appVersion: "Emora v1.0",
     },
     summary: {
-      startEli:     Math.round(startEli ?? 0),
-      endEli:       Math.round(endEli   ?? 0),
-      eliChange:    Math.round((startEli ?? 0) - (endEli ?? 0)),
-      improved:     (endEli ?? 0) < (startEli ?? 0),
+      startEli: Math.round(startEli ?? 0),
+      endEli: Math.round(endEli ?? 0),
+      eliChange: Math.round((startEli ?? 0) - (endEli ?? 0)),
+      improved: (endEli ?? 0) < (startEli ?? 0),
       durationSecs: duration ?? 0,
       durationMins: Math.floor((duration ?? 0) / 60),
-      techniqueUsed: technique   || "Supportive Conversation",
-      microAction:   microAction || "",
-      therapyMode:   therapyMode || "supportive",
+      techniqueUsed: technique || "Supportive Conversation",
+      microAction: microAction || "",
+      therapyMode: therapyMode || "supportive",
     },
     conversation: messages.map((m, i) => ({
-      index:         i + 1,
-      role:          m.role,
-      content:       m.content,
-      fromVoice:     m.fromVoice || false,
-      therapyMode:   m.therapyMode || null,
+      index: i + 1,
+      role: m.role,
+      content: m.content,
+      fromVoice: m.fromVoice || false,
+      therapyMode: m.therapyMode || null,
       contradiction: m.contradiction || false,
-      timestamp:     m.timestamp ? new Date(m.timestamp).toISOString() : null,
+      timestamp: m.timestamp ? new Date(m.timestamp).toISOString() : null,
     })),
     eliTimeline: eliHistory.map(p => ({
-      time:  p.time,
-      eli:   Math.round(p.eli),
+      time: p.time,
+      eli: Math.round(p.eli),
       label: getEliLabel(p.eli),
     })),
     signalSnapshot: { watch: watchData, facial: facialData, voice: voiceData },
   }
 
   downloadFile(
-    `affectsync-session-${new Date().toISOString().slice(0, 10)}.json`,
+    `Emora-session-${new Date().toISOString().slice(0, 10)}.json`,
     JSON.stringify(payload, null, 2),
     "application/json"
   )
@@ -584,7 +584,7 @@ export function exportSessionJSON(sessionData) {
 // ════════════════════════════════════════════════════════════════
 export function exportConversationCSV(messages = []) {
   const header = ["#", "Role", "From Voice", "Message", "Therapy Mode", "Contradiction", "Time"]
-  const rows   = messages.map((m, i) => [
+  const rows = messages.map((m, i) => [
     i + 1,
     m.role,
     m.fromVoice ? "Yes" : "No",
@@ -595,7 +595,7 @@ export function exportConversationCSV(messages = []) {
   ])
   const csv = [header, ...rows].map(r => r.join(",")).join("\n")
   downloadFile(
-    `affectsync-conversation-${new Date().toISOString().slice(0, 10)}.csv`,
+    `Emora-conversation-${new Date().toISOString().slice(0, 10)}.csv`,
     csv,
     "text/csv"
   )
@@ -606,10 +606,10 @@ export function exportConversationCSV(messages = []) {
 // ════════════════════════════════════════════════════════════════
 export function exportELITimelineCSV(eliHistory = []) {
   const header = ["Time", "ELI Score", "Status"]
-  const rows   = eliHistory.map(p => [p.time, Math.round(p.eli), getEliLabel(p.eli)])
-  const csv    = [header, ...rows].map(r => r.join(",")).join("\n")
+  const rows = eliHistory.map(p => [p.time, Math.round(p.eli), getEliLabel(p.eli)])
+  const csv = [header, ...rows].map(r => r.join(",")).join("\n")
   downloadFile(
-    `affectsync-eli-timeline-${new Date().toISOString().slice(0, 10)}.csv`,
+    `Emora-eli-timeline-${new Date().toISOString().slice(0, 10)}.csv`,
     csv,
     "text/csv"
   )
@@ -624,28 +624,28 @@ export function exportSessionReport(sessionData) {
     technique, microAction, messages = [], eliHistory = [], watchData = {},
   } = sessionData
 
-  const start    = Math.round(startEli ?? 0)
-  const end      = Math.round(endEli   ?? 0)
+  const start = Math.round(startEli ?? 0)
+  const end = Math.round(endEli ?? 0)
   const improved = end < start
-  const delta    = Math.abs(start - end)
-  const mins     = Math.floor((duration ?? 0) / 60)
-  const secs     = (duration ?? 0) % 60
-  const date     = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
-  const time     = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
+  const delta = Math.abs(start - end)
+  const mins = Math.floor((duration ?? 0) / 60)
+  const secs = (duration ?? 0) % 60
+  const date = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+  const time = new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
   const startColor = getEliColor(start)
-  const endColor   = getEliColor(end)
+  const endColor = getEliColor(end)
 
   const sparkBars = eliHistory.slice(-20).map(p => {
-    const h   = Math.round((p.eli / 100) * 40)
+    const h = Math.round((p.eli / 100) * 40)
     const col = getEliColor(p.eli)
     return `<span style="display:inline-block;width:6px;height:${h}px;background:${col};border-radius:2px;margin:0 1px;vertical-align:bottom;"></span>`
   }).join("")
 
   const convoHTML = messages.map(m => {
     const isUser = m.role === "user"
-    const bg     = isUser ? "#1e3a5f" : "#1a1a2e"
-    const align  = isUser ? "right" : "left"
-    const label  = isUser ? (m.fromVoice ? "You (voice 🎤)" : "You") : "AffectSync"
+    const bg = isUser ? "#1e3a5f" : "#1a1a2e"
+    const align = isUser ? "right" : "left"
+    const label = isUser ? (m.fromVoice ? "You (voice 🎤)" : "You") : "Emora"
     const modeTag = (!isUser && m.therapyMode)
       ? `<span style="font-size:10px;color:#60A5FA;margin-bottom:4px;display:block;">${m.therapyMode}</span>`
       : ""
@@ -664,7 +664,7 @@ export function exportSessionReport(sessionData) {
   const html = `<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>AffectSync Report — ${date}</title>
+<title>Emora Report — ${date}</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#0a0a0f;color:#e2e8f0;padding:32px}
@@ -687,36 +687,36 @@ h2{font-size:14px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-
 <body>
 <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
 <div class="card">
-  <h1>🧠 AffectSync Session Report</h1>
+  <h1>🧠 Emora Session Report</h1>
   <p class="meta">${date} at ${time} · Session: ${sessionId || "local"}</p>
 </div>
 <div class="card">
   <h2>Emotional Load Index</h2>
   <div class="eli-row">
     <div style="text-align:center"><div class="meta">Start</div><div class="eli-num" style="color:${startColor}">${start}</div><div class="eli-label">${getEliLabel(start)}</div></div>
-    <div><div class="arrow" style="color:${improved?"#22c55e":"#f97316"}">${improved?"↓":"↑"}</div><div style="font-size:13px;color:${improved?"#22c55e":"#f97316"};text-align:center">${improved?`−${delta} improved`:`+${delta} increased`}</div></div>
+    <div><div class="arrow" style="color:${improved ? "#22c55e" : "#f97316"}">${improved ? "↓" : "↑"}</div><div style="font-size:13px;color:${improved ? "#22c55e" : "#f97316"};text-align:center">${improved ? `−${delta} improved` : `+${delta} increased`}</div></div>
     <div style="text-align:center"><div class="meta">End</div><div class="eli-num" style="color:${endColor}">${end}</div><div class="eli-label">${getEliLabel(end)}</div></div>
   </div>
-  ${sparkBars?`<div style="margin-top:20px"><div class="meta" style="margin-bottom:6px">ELI Timeline</div><div style="height:44px;display:flex;align-items:flex-end">${sparkBars}</div></div>`:""}
+  ${sparkBars ? `<div style="margin-top:20px"><div class="meta" style="margin-bottom:6px">ELI Timeline</div><div style="height:44px;display:flex;align-items:flex-end">${sparkBars}</div></div>` : ""}
 </div>
 <div class="card">
   <h2>Session Details</h2>
   <div class="stat-row">
     <div class="stat"><div class="stat-label">Duration</div><div class="stat-value">${mins}m ${secs}s</div></div>
-    <div class="stat"><div class="stat-label">Technique</div><div class="stat-value" style="font-size:13px">${technique||"Supportive"}</div></div>
-    <div class="stat"><div class="stat-label">HRV</div><div class="stat-value">${watchData.hrv??"--"} ms</div></div>
-    <div class="stat"><div class="stat-label">Heart Rate</div><div class="stat-value">${watchData.heart_rate??"--"} bpm</div></div>
-    <div class="stat"><div class="stat-label">Sleep</div><div class="stat-value">${watchData.sleep_hours??"--"} hrs</div></div>
+    <div class="stat"><div class="stat-label">Technique</div><div class="stat-value" style="font-size:13px">${technique || "Supportive"}</div></div>
+    <div class="stat"><div class="stat-label">HRV</div><div class="stat-value">${watchData.hrv ?? "--"} ms</div></div>
+    <div class="stat"><div class="stat-label">Heart Rate</div><div class="stat-value">${watchData.heart_rate ?? "--"} bpm</div></div>
+    <div class="stat"><div class="stat-label">Sleep</div><div class="stat-value">${watchData.sleep_hours ?? "--"} hrs</div></div>
     <div class="stat"><div class="stat-label">Messages</div><div class="stat-value">${messages.length}</div></div>
   </div>
 </div>
-${microAction?`<div class="card"><h2>Your Action for Today</h2><div class="action-box"><p style="color:#93c5fd;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Next step</p><p style="font-size:14px;line-height:1.6">${microAction}</p></div></div>`:""}
-${messages.length>0?`<div class="card"><h2>Conversation (${messages.length} messages)</h2><div style="max-height:600px;overflow-y:auto">${convoHTML}</div></div>`:""}
-<p style="text-align:center;color:#374151;font-size:11px;margin-top:20px">Generated by AffectSync · ${date} · All data is private</p>
+${microAction ? `<div class="card"><h2>Your Action for Today</h2><div class="action-box"><p style="color:#93c5fd;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">Next step</p><p style="font-size:14px;line-height:1.6">${microAction}</p></div></div>` : ""}
+${messages.length > 0 ? `<div class="card"><h2>Conversation (${messages.length} messages)</h2><div style="max-height:600px;overflow-y:auto">${convoHTML}</div></div>` : ""}
+<p style="text-align:center;color:#374151;font-size:11px;margin-top:20px">Generated by Emora · ${date} · All data is private</p>
 </body></html>`
 
   downloadFile(
-    `affectsync-report-${new Date().toISOString().slice(0, 10)}.html`,
+    `Emora-report-${new Date().toISOString().slice(0, 10)}.html`,
     html,
     "text/html"
   )

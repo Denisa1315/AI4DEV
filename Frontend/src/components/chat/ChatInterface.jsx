@@ -1,46 +1,46 @@
 import { useState, useRef, useEffect, useCallback } from "react"
-import { Mic, MicOff, Volume2 }                     from "lucide-react"
-import useAppStore                                   from "../../store/useAppStore"
-import { sendChatMessage, getLocalAIResponse }       from "../../api/client"
-import { THERAPY_MODE_LABELS, THERAPY_MODE_COLORS }  from "../../constants"
-import { getEliColor }                               from "../../utils/scoring"
-import { EMOTION_META }                              from "../../hooks/useFaceEmotion"
-import { useSpeechToText }                           from "../../hooks/useSpeechToText"
-import EmotionDetector                               from "../webcam/EmotionDetector"
-import MessageBubble                                 from "./MessageBubble"
-import TypingIndicator                               from "./TypingIndicator"
-import ChatInput                                     from "./ChatInput"
+import { Mic, MicOff, Volume2 } from "lucide-react"
+import useAppStore from "../../store/useAppStore"
+import { sendChatMessage, getLocalAIResponse } from "../../api/client"
+import { THERAPY_MODE_LABELS, THERAPY_MODE_COLORS } from "../../constants"
+import { getEliColor } from "../../utils/scoring"
+import { EMOTION_META } from "../../hooks/useFaceEmotion"
+import { useSpeechToText } from "../../hooks/useSpeechToText"
+import EmotionDetector from "../webcam/EmotionDetector"
+import MessageBubble from "./MessageBubble"
+import TypingIndicator from "./TypingIndicator"
+import ChatInput from "./ChatInput"
 
 export default function ChatInterface({ onTypingScore }) {
-  const bottomRef              = useRef(null)
+  const bottomRef = useRef(null)
   const [ttsEnabled, setTtsEnabled] = useState(false)
 
   // ── Store ─────────────────────────────────────────────────────
-  const messages      = useAppStore((s) => s.messages)
-  const isAiTyping    = useAppStore((s) => s.isAiTyping)
-  const eliData       = useAppStore((s) => s.eliData)
-  const therapyMode   = useAppStore((s) => s.therapyMode)
+  const messages = useAppStore((s) => s.messages)
+  const isAiTyping = useAppStore((s) => s.isAiTyping)
+  const eliData = useAppStore((s) => s.eliData)
+  const therapyMode = useAppStore((s) => s.therapyMode)
   const backendOnline = useAppStore((s) => s.backendOnline)
-  const isRecording   = useAppStore((s) => s.isRecording)
-  const faceEmotion   = useAppStore((s) => s.faceEmotion)
-  const addMessage    = useAppStore((s) => s.addMessage)
-  const setAiTyping   = useAppStore((s) => s.setAiTyping)
-  const setTherapy    = useAppStore((s) => s.setTherapyMode)
+  const isRecording = useAppStore((s) => s.isRecording)
+  const faceEmotion = useAppStore((s) => s.faceEmotion)
+  const addMessage = useAppStore((s) => s.addMessage)
+  const setAiTyping = useAppStore((s) => s.setAiTyping)
+  const setTherapy = useAppStore((s) => s.setTherapyMode)
 
-  const faceMeta  = EMOTION_META[faceEmotion?.dominant] || EMOTION_META.neutral
-  const modeColor = THERAPY_MODE_COLORS[therapyMode]    || "#9CA3AF"
-  const eliColor  = getEliColor(eliData?.eli ?? 50)
+  const faceMeta = EMOTION_META[faceEmotion?.dominant] || EMOTION_META.neutral
+  const modeColor = THERAPY_MODE_COLORS[therapyMode] || "#9CA3AF"
+  const eliColor = getEliColor(eliData?.eli ?? 50)
 
   // ── TTS ───────────────────────────────────────────────────────
   const speakResponse = useCallback((text) => {
     if (!window.speechSynthesis || !text || !ttsEnabled) return
     window.speechSynthesis.cancel()
-    const u    = new SpeechSynthesisUtterance(text)
-    u.lang     = "en-IN"
-    u.rate     = 0.95
-    u.pitch    = 1.0
-    u.volume   = 0.9
-    const voices   = window.speechSynthesis.getVoices()
+    const u = new SpeechSynthesisUtterance(text)
+    u.lang = "en-IN"
+    u.rate = 0.95
+    u.pitch = 1.0
+    u.volume = 0.9
+    const voices = window.speechSynthesis.getVoices()
     const preferred = voices.find(v =>
       v.lang.startsWith("en") && (v.name.includes("Google") || v.name.includes("Natural"))
     ) || voices.find(v => v.lang.startsWith("en"))
@@ -58,24 +58,24 @@ export default function ChatInterface({ onTypingScore }) {
         : await getLocalAIResponse(text, eliData, messages, faceEmotion)
 
       addMessage({
-        role:          "assistant",
-        content:       data.response,
-        therapyMode:   data.therapy_mode,
+        role: "assistant",
+        content: data.response,
+        therapyMode: data.therapy_mode,
         contradiction: data.contradiction_detected,
-        faceUsed:      data.face_emotion_used,
+        faceUsed: data.face_emotion_used,
       })
       if (data.therapy_mode) setTherapy(data.therapy_mode)
       speakResponse(data.response)
     } catch {
       addMessage({
-        role:    "assistant",
+        role: "assistant",
         content: "I'm here with you. Can you tell me more about how you're feeling?",
       })
     } finally {
       setAiTyping(false)
     }
   }, [backendOnline, eliData, messages, faceEmotion,
-      addMessage, setAiTyping, setTherapy, speakResponse])
+    addMessage, setAiTyping, setTherapy, speakResponse])
 
   // ── Speech to text ────────────────────────────────────────────
   const handleTranscript = useCallback(async (spokenText) => {
@@ -102,10 +102,10 @@ export default function ChatInterface({ onTypingScore }) {
   // Dynamic placeholder based on face
   const inputPlaceholder = isListening
     ? "Speaking... (click Stop to type)"
-    : faceEmotion?.dominant === "sad"     ? "I'm here — take your time..."
-    : faceEmotion?.dominant === "angry"   ? "Tell me what's going on..."
-    : faceEmotion?.dominant === "fearful" ? "You're safe here, tell me more..."
-    : "How are you feeling right now..."
+    : faceEmotion?.dominant === "sad" ? "I'm here — take your time..."
+      : faceEmotion?.dominant === "angry" ? "Tell me what's going on..."
+        : faceEmotion?.dominant === "fearful" ? "You're safe here, tell me more..."
+          : "How are you feeling right now..."
 
   return (
     <div className="glass rounded-2xl flex flex-col" style={{ height: "100%" }}>
@@ -118,7 +118,7 @@ export default function ChatInterface({ onTypingScore }) {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full animate-pulse"
             style={{ background: eliColor }} />
-          <span className="text-sm text-gray-200 font-semibold">AffectSync</span>
+          <span className="text-sm text-gray-200 font-semibold">Emora</span>
           {!backendOnline && (
             <span className="text-gray-600 text-xs">(Local AI)</span>
           )}
@@ -146,9 +146,9 @@ export default function ChatInterface({ onTypingScore }) {
           {/* Therapy mode badge */}
           <span className="text-xs px-2 py-0.5 rounded-full"
             style={{
-              color:      modeColor,
+              color: modeColor,
               background: modeColor + "15",
-              border:     `1px solid ${modeColor}30`,
+              border: `1px solid ${modeColor}30`,
             }}>
             {THERAPY_MODE_LABELS[therapyMode] || "Supportive"}
           </span>
@@ -170,9 +170,9 @@ export default function ChatInterface({ onTypingScore }) {
             title={ttsEnabled ? "Mute AI voice" : "Enable AI voice"}
             className="p-1.5 rounded-lg transition-colors"
             style={{
-              color:      ttsEnabled ? "#60A5FA" : "#4B5563",
+              color: ttsEnabled ? "#60A5FA" : "#4B5563",
               background: ttsEnabled ? "#60A5FA18" : "transparent",
-              border:     `1px solid ${ttsEnabled ? "#60A5FA40" : "#374151"}`,
+              border: `1px solid ${ttsEnabled ? "#60A5FA40" : "#374151"}`,
             }}>
             <Volume2 size={13} />
           </button>
@@ -192,23 +192,23 @@ export default function ChatInterface({ onTypingScore }) {
                 {faceEmotion?.dominant === "sad"
                   ? "I can see you might be going through something"
                   : faceEmotion?.dominant === "angry"
-                  ? "Something seems to be bothering you"
-                  : faceEmotion?.dominant === "fearful"
-                  ? "You seem a little anxious right now"
-                  : faceEmotion?.dominant === "happy"
-                  ? "You seem to be in a good place today!"
-                  : "Hello — I'm here with you"}
+                    ? "Something seems to be bothering you"
+                    : faceEmotion?.dominant === "fearful"
+                      ? "You seem a little anxious right now"
+                      : faceEmotion?.dominant === "happy"
+                        ? "You seem to be in a good place today!"
+                        : "Hello — I'm here with you"}
               </p>
               <p className="text-gray-600 text-sm">
                 {faceEmotion?.dominant === "sad"
                   ? "Whenever you're ready to talk, I'm listening."
                   : faceEmotion?.dominant === "angry"
-                  ? "Want to tell me what's going on?"
-                  : faceEmotion?.dominant === "fearful"
-                  ? "Take your time — you're safe here."
-                  : faceEmotion?.dominant === "happy"
-                  ? "What's been going well lately?"
-                  : "Start by typing or speaking how you feel today."}
+                    ? "Want to tell me what's going on?"
+                    : faceEmotion?.dominant === "fearful"
+                      ? "Take your time — you're safe here."
+                      : faceEmotion?.dominant === "happy"
+                        ? "What's been going well lately?"
+                        : "Start by typing or speaking how you feel today."}
               </p>
             </div>
             {sttSupported && (
@@ -217,9 +217,9 @@ export default function ChatInterface({ onTypingScore }) {
                 className="flex items-center gap-2 text-xs px-5 py-2.5
                   rounded-xl border transition-all hover:scale-105"
                 style={{
-                  color:       isListening ? "#22c55e" : "#60A5FA",
+                  color: isListening ? "#22c55e" : "#60A5FA",
                   borderColor: isListening ? "#22c55e50" : "#60A5FA40",
-                  background:  isListening ? "#22c55e10" : "#60A5FA10",
+                  background: isListening ? "#22c55e10" : "#60A5FA10",
                 }}>
                 {isListening ? <MicOff size={14} /> : <Mic size={14} />}
                 {isListening ? "Stop listening" : "Tap to speak"}
@@ -266,7 +266,7 @@ export default function ChatInterface({ onTypingScore }) {
             bg-green-900/15 border-b border-green-800/20">
             <div className="flex items-center gap-2">
               <div className="flex items-end gap-0.5 h-4">
-                {[0,1,2,3,4,5,6].map((_, i) => (
+                {[0, 1, 2, 3, 4, 5, 6].map((_, i) => (
                   <div key={i} className="wave-bar w-0.5 bg-green-400 rounded-full"
                     style={{ height: "100%" }} />
                 ))}
@@ -294,9 +294,9 @@ export default function ChatInterface({ onTypingScore }) {
                 disabled:opacity-30 hover:scale-105 active:scale-95"
               style={{
                 background: isListening ? "#22c55e20" : "#1f2937",
-                color:      isListening ? "#22c55e"   : "#9CA3AF",
-                border:     `1px solid ${isListening ? "#22c55e50" : "#374151"}`,
-                boxShadow:  isListening ? "0 0 12px #22c55e30" : "none",
+                color: isListening ? "#22c55e" : "#9CA3AF",
+                border: `1px solid ${isListening ? "#22c55e50" : "#374151"}`,
+                boxShadow: isListening ? "0 0 12px #22c55e30" : "none",
               }}>
               {isListening ? <MicOff size={16} /> : <Mic size={16} />}
             </button>

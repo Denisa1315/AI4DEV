@@ -1,19 +1,31 @@
 from fastapi import APIRouter
-from services.agents.therapy_router import route_therapy
-from services.ml.fusion_engine import fusion_engine
-from services.ml.voice_analysis import voice_analyzer
+from services.agents.therapy_router import route
+import time
 
 router = APIRouter(prefix="/api")
 
 @router.post("/chat")
 async def chat(body: dict):
-    message     = body.get("message", "")
     eli_payload = body.get("eli_payload", {})
-    voice_data  = voice_analyzer.to_dict()
 
-    response = route_therapy(eli_payload, voice_data)
+    # If the caller provided a top-level message, inject it as the transcript
+    # so the therapy router can use it even without a running WebSocket session.
+    message = body.get("message", "").strip()
+    if message and not eli_payload.get("transcript"):
+        eli_payload["transcript"] = message
 
+    result = route(eli_payload)
+
+    # `result` is a dict with keys: response, agent, emotion, eli, transcript_heard
+    # The frontend reads: data.response, data.therapy_mode, data.contradiction_detected
     return {
-        "response":  response,
-        "timestamp": __import__("time").time()
+        "response":               result.get("response", ""),
+        "therapy_mode":           result.get("agent", "supportive"),   # frontend key
+        "agent":                  result.get("agent", "supportive"),   # backend key (keep both)
+        "emotion":                result.get("emotion", "neutral"),
+        "eli":                    result.get("eli", 50),
+        "contradiction_detected": eli_payload.get("contradiction_detected", False),
+        "show_resources":         result.get("show_resources", False),
+        "resources":              result.get("resources", {}),
+        "timestamp":              time.time(),
     }

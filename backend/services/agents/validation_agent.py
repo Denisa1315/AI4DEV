@@ -8,7 +8,7 @@ class ValidationAgent:
         return {"response": response, "agent": "validation", "emotion": emotion, "eli": eli}
 
     def _generate(self, emotion, eli, transcript, baseline_context):
-        prompt = f"""You are AffectSync, a warm empathetic mental health companion for Indian users.
+        prompt = f"""You are Emora, a warm empathetic mental health companion for Indian users.
 The user appears sad or low (stress level: {eli:.0f}/100).
 {f"Context: {baseline_context}" if baseline_context else ""}
 They said: "{transcript or 'nothing yet'}"

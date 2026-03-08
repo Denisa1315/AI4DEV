@@ -70,7 +70,7 @@ while True:
                      (100,200,100), -1)
         y += 22
 
-    cv2.imshow("AffectSync — Facial Analysis", frame)
+    cv2.imshow("Emora — Facial Analysis", frame)
 
     key = cv2.waitKey(100) & 0xFF
     if key == ord('q') or key == ord('Q') or key == 27:
